@@ -90,29 +90,33 @@ var jsonTree = {
 
 var container = document.querySelector('.container');
 
-var drawDataRocketsTree = function (jsonTree) {
-    var keyJsonTree = Object.keys(jsonTree);
+var createElement = function (value) {
+    var newElement = document.createElement('div');
+    newElement.textContent = value;
+    container.appendChild(newElement);
+};
 
-    for (var i = 0; i < keyJsonTree.length; i++) {
-        if (typeof(jsonTree[keyJsonTree[i]]) === 'string') {
-
-            var newElement = document.createElement('div');
-            newElement.innerHTML = jsonTree[keyJsonTree[i]];
-            container.appendChild(newElement);
-
+var drawDataRocketsTree = function (node) {
+    var keysNode = Object.keys(node);
+    for (var index = 0; index < keysNode.length; index++) {
+        if (typeof(node[keysNode[index]]) === 'string') {
+            createElement(node[keysNode[index]]);
         } else {
-            var newJsonTree = jsonTree[keyJsonTree[i]];
-            drawDataRocketsTree(newJsonTree);
+            var newNode = node[keysNode[index]];
+            drawDataRocketsTree(newNode);
         }
     }
 };
 
-drawDataRocketsTree(jsonTree);
+//second version
+var drawDataRocketsTree2 = function (node) {
+    createElement(node.name);
+    if (!node.skills) {
+        return;
+    }
+    for (var index = 0; index < node.skills.length; index++) {
+        drawDataRocketsTree2(node.skills[index]);
+    }
+};
 
-
-
-
-
-
-
-
+drawDataRocketsTree2(jsonTree);
