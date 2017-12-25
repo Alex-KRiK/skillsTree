@@ -90,33 +90,34 @@ var jsonTree = {
 
 var container = document.querySelector('.container');
 
-var createElement = function (value) {
-    var newElement = document.createElement('div');
-    newElement.textContent = value;
-    container.appendChild(newElement);
+var drawDataRocketsTree2 = function (node) {
+    createNodes(node.name, node.skills);
+};
+drawDataRocketsTree2(jsonTree);
+
+var createNodes = function (value, array) {
+    var ul = document.createElement('ul');
+    var li = document.createElement('li');
+    li.textContent = value;
+    ul.appendChild(li);
+    container.appendChild(ul);
+
+    createNodesSkills(li, array);
 };
 
-var drawDataRocketsTree = function (node) {
-    var keysNode = Object.keys(node);
-    for (var index = 0; index < keysNode.length; index++) {
-        if (typeof(node[keysNode[index]]) === 'string') {
-            createElement(node[keysNode[index]]);
-        } else {
-            var newNode = node[keysNode[index]];
-            drawDataRocketsTree(newNode);
+var createNodesSkills = function (li, array) {
+    var ul = document.createElement('ul');
+    li.appendChild(ul);
+
+    for (var index = 0; index < array.length; index++) {
+        li = document.createElement('li');
+        li.textContent = array[index].name;
+        ul.appendChild(li);
+
+        if (array[index].skills) {
+            createNodesSkills(li, array[index].skills);
         }
     }
 };
 
-//second version
-var drawDataRocketsTree2 = function (node) {
-    createElement(node.name);
-    if (!node.skills) {
-        return;
-    }
-    for (var index = 0; index < node.skills.length; index++) {
-        drawDataRocketsTree2(node.skills[index]);
-    }
-};
 
-drawDataRocketsTree2(jsonTree);
