@@ -1,0 +1,19 @@
+.container {
+    padding: 7px 12px 7px 15px;
+    margin-left: 0px;
+    font-family: "Arial", sans-serif;
+    font-size: 14px;
+}
+
+spane {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+ul {
+    padding-left: 27px;
+}
+
+li {
+    padding: 2px 0 2px 0;
+}

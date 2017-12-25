@@ -90,27 +90,18 @@ var jsonTree = {
 
 var container = document.querySelector('.container');
 
-var drawDataRocketsTree2 = function (node) {
-    createNodes(node.name, node.skills);
-};
-drawDataRocketsTree2(jsonTree);
-
 var createNodes = function (value, array) {
+    container.innerHTML = '<spane>' + value + '</spane>' + '<hr>';
+
+    createNodesSkills(container, array);
+};
+
+var createNodesSkills = function (container, array) {
     var ul = document.createElement('ul');
-    var li = document.createElement('li');
-    li.textContent = value;
-    ul.appendChild(li);
     container.appendChild(ul);
 
-    createNodesSkills(li, array);
-};
-
-var createNodesSkills = function (li, array) {
-    var ul = document.createElement('ul');
-    li.appendChild(ul);
-
     for (var index = 0; index < array.length; index++) {
-        li = document.createElement('li');
+        var li = document.createElement('li');
         li.textContent = array[index].name;
         ul.appendChild(li);
 
@@ -119,5 +110,11 @@ var createNodesSkills = function (li, array) {
         }
     }
 };
+
+var drawDataRocketsTree2 = function (node) {
+    createNodes(node.name, node.skills);
+};
+
+drawDataRocketsTree2(jsonTree);
 
 
