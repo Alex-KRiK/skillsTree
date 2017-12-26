@@ -5,16 +5,24 @@
     font-size: 14px;
 }
 
-spane {
+span {
     font-size: 18px;
     font-weight: bold;
 }
 
 ul {
-    /*display: block;*/
     padding-left: 27px;
 }
 
 li {
     padding: 2px 0 2px 0;
 }
+
+ul.closed {
+    display: none;
+}
+
+/*
+.menu {
+    border-bottom: 1px dotted darkgray;
+}*/
