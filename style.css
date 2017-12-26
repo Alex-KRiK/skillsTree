@@ -18,10 +18,15 @@ li {
     padding: 2px 0 2px 0;
 }
 
-ul.closed {
+.closed ul:first-child {
     display: none;
 }
 
+/*
+ul.closed {
+    display: none;
+}
+*/
 /*
 .menu {
     border-bottom: 1px dotted darkgray;

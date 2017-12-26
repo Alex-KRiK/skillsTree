@@ -122,6 +122,6 @@ container.addEventListener('click', function (event) {
     var element = event.target;
 
     if (element.classList.contains('opened')) {
-        element.firstElementChild.classList.toggle('closed');
+        element.classList.toggle('closed');
     }
 });
