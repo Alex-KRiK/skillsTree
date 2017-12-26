@@ -98,6 +98,7 @@ var createNodes = function (value, array) {
 
 var createNodesSkills = function (container, array) {
     var ul = document.createElement('ul');
+    ul.style.display = 'block';
     container.appendChild(ul);
 
     for (var index = 0; index < array.length; index++) {
@@ -106,6 +107,8 @@ var createNodesSkills = function (container, array) {
         ul.appendChild(li);
 
         if (array[index].skills) {
+            li.className = 'menu';
+
             createNodesSkills(li, array[index].skills);
         }
     }
@@ -116,5 +119,18 @@ var drawDataRocketsTree2 = function (node) {
 };
 
 drawDataRocketsTree2(jsonTree);
+
+container.addEventListener('click', function (event) {
+    var element = event.target;
+
+    if ((element.className) && (element.firstElementChild.style.display === 'block')) {
+        element.firstElementChild.style.display = 'none';
+    } else if ((element.className) && (element.firstElementChild.style.display === 'none')) {
+        element.firstElementChild.style.display = 'block';
+    }
+});
+
+
+
 
 
