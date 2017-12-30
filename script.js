@@ -91,7 +91,11 @@ var jsonTree = {
 var container = document.querySelector('.container');
 
 var createNodes = function (value, array) {
-    container.innerHTML = '<span>' + value + '</span>' + '<hr/>';
+    var span = document.createElement('span');
+    var hr = document.createElement('hr');
+    span.textContent = value;
+    container.appendChild(span);
+    container.appendChild(hr);
 
     createNodesSkills(container, array);
 };
