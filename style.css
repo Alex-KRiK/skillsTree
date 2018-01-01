@@ -5,14 +5,23 @@
     font-size: 14px;
 }
 
+.title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
 ul {
-padding-left: 27px;
+    padding-left: 27px;
 }
 
 li {
-padding: 2px 0 2px 0;
+    padding: 2px 0 2px 0;
 }
 
-.closed ul:first-child {
+.closed span + ul {
     display: none;
+}
+
+span:hover {
+    font-weight: bold;
 }
