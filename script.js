@@ -129,5 +129,6 @@ container.addEventListener('click', function (event) {
 
     if (element.parentNode.classList.contains('opened')) {
         element.parentNode.classList.toggle('closed');
+        element.classList.toggle('dashed');
     }
 });

@@ -25,3 +25,7 @@ li {
 span:hover {
     font-weight: bold;
 }
+
+.dashed {
+    border-bottom: 1px dashed darkgray;
+}
