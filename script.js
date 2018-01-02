@@ -101,15 +101,20 @@ var createNodes = function (value, array) {
     createNodesSkills(container, array);
 };
 
+var createLi = function (value) {
+    var li = document.createElement('li');
+    var span = document.createElement('span');
+    span.textContent = value;
+    li.appendChild(span);
+    return li;
+};
+
 var createNodesSkills = function (container, array) {
     var ul = document.createElement('ul');
     container.appendChild(ul);
 
     for (var index = 0; index < array.length; index++) {
-        var li = document.createElement('li');
-        var span = document.createElement('span');
-        span.textContent = array[index].name;
-        li.appendChild(span);
+        var li = createLi(array[index].name);
         ul.appendChild(li);
 
         if (array[index].skills) {
@@ -119,16 +124,38 @@ var createNodesSkills = function (container, array) {
     }
 };
 
-var drawDataRocketsTree2 = function (node) {
+var drawDataRocketsTree = function (node) {
     createNodes(node.name, node.skills);
 };
-drawDataRocketsTree2(jsonTree);
+drawDataRocketsTree(jsonTree);
 
-container.addEventListener('click', function (event) {
+container.addEventListener('click', function closeOpenBranch (event) {
     var element = event.target;
 
-    if (element.parentNode.classList.contains('opened')) {
+    if (element.tagName === 'SPAN' && element.parentNode.classList.contains('opened')) {
         element.parentNode.classList.toggle('closed');
         element.classList.toggle('dashed');
+    }
+});
+
+container.addEventListener('contextmenu', function addNewElement (event) {
+    var element = event.target;
+
+    if (element.tagName === 'SPAN') {
+        event.preventDefault();
+        var newCategory = prompt('Add new category', '');
+
+        if (newCategory !== '' && newCategory !== null) {
+            var li = createLi(newCategory);
+
+            if (element.nextSibling) {
+                element.nextSibling.appendChild(li);
+            } else {
+                element.parentNode.classList.add('opened');
+                var ul = document.createElement('ul');
+                ul.appendChild(li);
+                element.parentNode.appendChild(ul) ;
+            }
+        }
     }
 });
