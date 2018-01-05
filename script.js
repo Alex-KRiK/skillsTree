@@ -103,6 +103,7 @@ var createNodes = function (value, array) {
 
 var createLi = function (value) {
     var li = document.createElement('li');
+    li.classList.add('node');
     var span = document.createElement('span');
     span.textContent = value;
     li.appendChild(span);
@@ -111,6 +112,7 @@ var createLi = function (value) {
 
 var createNodesSkills = function (container, array) {
     var ul = document.createElement('ul');
+    ul.classList.add('skills');
     container.appendChild(ul);
 
     for (var index = 0; index < array.length; index++) {
@@ -129,7 +131,7 @@ var drawDataRocketsTree = function (node) {
 };
 drawDataRocketsTree(jsonTree);
 
-container.addEventListener('click', function closeOpenBranch (event) {
+container.addEventListener('click', function closeOpenBranch(event) {
     var element = event.target;
 
     if (element.tagName === 'SPAN' && element.parentNode.classList.contains('opened')) {
@@ -138,7 +140,7 @@ container.addEventListener('click', function closeOpenBranch (event) {
     }
 });
 
-container.addEventListener('contextmenu', function addNewElement (event) {
+container.addEventListener('contextmenu', function addNewElement(event) {
     var element = event.target;
 
     if (element.tagName === 'SPAN') {
@@ -153,9 +155,95 @@ container.addEventListener('contextmenu', function addNewElement (event) {
             } else {
                 element.parentNode.classList.add('opened');
                 var ul = document.createElement('ul');
+                ul.classList.add('skills');
                 ul.appendChild(li);
-                element.parentNode.appendChild(ul) ;
+                element.parentNode.appendChild(ul);
             }
+            linkLi(li);
         }
     }
 });
+
+var indexUl = 0;
+var xx = [];
+
+var searchIndexLi = function (parentNode, nodeLi) {
+    var indexLi;
+    var parentNodeArray;
+
+
+    parentNodeArray = Array.prototype.slice.call(parentNode.children);
+    indexLi = parentNodeArray.indexOf(nodeLi);
+    console.log('indexLi = ', indexLi);
+    xx.unshift(indexLi);
+    console.log('xx = ', xx);
+
+
+};
+
+var linkLi = function (nodeLi) {
+    if (nodeLi && nodeLi.parentElement) {
+        if (nodeLi.parentElement.classList.contains('skills')) {
+            var ul = nodeLi.parentElement;
+            console.log('skills = ', nodeLi.parentElement);
+            indexUl += 1;
+            console.log('indexUl = ' + indexUl);
+
+            searchIndexLi(ul, nodeLi);
+        }
+
+        linkLi(nodeLi.parentElement.parentElement);
+    }
+};
+
+
+/*
+
+var x = JSON.stringify(jsonTree['skills'][0]['skills']);
+//x = x + '["name"]';
+console.log('x = ', x);
+x = JSON.parse(x);
+console.log('x = ', x);
+
+ console.log(jsonTree['skills'][0]['skills'][0]['name']);
+ console.log(jsonTree.skills[0].skills[1].skills[0].skills[0].name);
+*/
+
+
+
+/*var addNewElementInJsonTree = function () {
+
+
+ newJsonTree = ;
+ };*/
+//localStorage.setItem('dataRocketsSkillsTree', JSON.stringify(newJsonTree));
+
+//jsonTree = localStorage.getItem('dataRocketsSkillsTree');
+
+//localStorage.clear();
+
+
+//localStorage.setItem('myStorage', 'KRiK-storage');
+//localStorage.setItem('myStorage2', 'KRiK-storage2');
+//localStorage.setItem('myStorage3', 'KRiK-storage3');
+//localStorage.removeItem('myStorage3');
+//localStorage.clear();
+
+//console.log(localStorage.getItem('myStorage'));
+
+
+/*localStorage.setItem('dataRocketsSkillsTree', JSON.stringify(jsonTree));
+ console.log(localStorage.getItem('dataRocketsSkillsTree'));
+ var obj = JSON.parse(localStorage.getItem('dataRocketsSkillsTree'));
+ console.dir(obj);*/
+
+
+/*sessionStorage.setItem('newStorage2', 'KRiK-X');
+ sessionStorage.setItem('newStorage', 'KRiK-2');*/
+
+
+
+
+
+
+
