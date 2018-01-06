@@ -101,27 +101,26 @@ var createNodes = function (value, array) {
     createNodesSkills(container, array);
 };
 
-var createLi = function (value) {
+var createNodeLi = function (value) {
     var li = document.createElement('li');
-    li.classList.add('node');
     var span = document.createElement('span');
     span.textContent = value;
     li.appendChild(span);
     return li;
 };
 
-var createNodesSkills = function (container, array) {
+var createNodesSkills = function (container, arraySkills) {
     var ul = document.createElement('ul');
     ul.classList.add('skills');
     container.appendChild(ul);
 
-    for (var index = 0; index < array.length; index++) {
-        var li = createLi(array[index].name);
+    for (var index = 0; index < arraySkills.length; index++) {
+        var li = createNodeLi(arraySkills[index].name);
         ul.appendChild(li);
 
-        if (array[index].skills) {
+        if (arraySkills[index].skills) {
             li.classList.add('opened');
-            createNodesSkills(li, array[index].skills);
+            createNodesSkills(li, arraySkills[index].skills);
         }
     }
 };
@@ -131,9 +130,8 @@ var drawDataRocketsTree = function (node) {
 };
 drawDataRocketsTree(jsonTree);
 
-container.addEventListener('click', function closeOpenBranch(event) {
+container.addEventListener('click', function closeAndOpenBranch(event) {
     var element = event.target;
-
     if (element.tagName === 'SPAN' && element.parentNode.classList.contains('opened')) {
         element.parentNode.classList.toggle('closed');
         element.classList.toggle('dashed');
@@ -142,13 +140,12 @@ container.addEventListener('click', function closeOpenBranch(event) {
 
 container.addEventListener('contextmenu', function addNewElement(event) {
     var element = event.target;
-
     if (element.tagName === 'SPAN') {
         event.preventDefault();
-        var newCategory = prompt('Add new category', '');
+        var nameNewBranch = prompt('Enter new branch name', '');
 
-        if (newCategory !== '' && newCategory !== null) {
-            var li = createLi(newCategory);
+        if (nameNewBranch !== '' && nameNewBranch !== null) {
+            var li = createNodeLi(nameNewBranch);
 
             if (element.nextSibling) {
                 element.nextSibling.appendChild(li);
@@ -159,55 +156,72 @@ container.addEventListener('contextmenu', function addNewElement(event) {
                 ul.appendChild(li);
                 element.parentNode.appendChild(ul);
             }
-            linkLi(li);
+            indicesLiInTree(li, nameNewBranch);
         }
     }
 });
 
-var indexUl = 0;
-var xx = [];
+var branchIndicesArray = [];
 
-var searchIndexLi = function (parentNode, nodeLi) {
+var searchIndexLi = function (nodeLi) {
     var indexLi;
     var parentNodeArray;
-
-
-    parentNodeArray = Array.prototype.slice.call(parentNode.children);
+    parentNodeArray = Array.prototype.slice.call(nodeLi.parentElement.children);
     indexLi = parentNodeArray.indexOf(nodeLi);
-    console.log('indexLi = ', indexLi);
-    xx.unshift(indexLi);
-    console.log('xx = ', xx);
-
-
+    branchIndicesArray.unshift(indexLi);
 };
 
-var linkLi = function (nodeLi) {
+var indicesLiInTree = function (nodeLi, nameNewBranch) {
     if (nodeLi && nodeLi.parentElement) {
         if (nodeLi.parentElement.classList.contains('skills')) {
-            var ul = nodeLi.parentElement;
-            console.log('skills = ', nodeLi.parentElement);
-            indexUl += 1;
-            console.log('indexUl = ' + indexUl);
-
-            searchIndexLi(ul, nodeLi);
+            searchIndexLi(nodeLi);
         }
-
-        linkLi(nodeLi.parentElement.parentElement);
+        indicesLiInTree(nodeLi.parentElement.parentElement, nameNewBranch);
+        return;
     }
+    saveChangesInJsonTree(branchIndicesArray, nameNewBranch);
+};
+
+var saveChangesInJsonTree = function (branchIndicesArray, nameNewBranch) {
+    var newJsonTree = jsonTree;
+    var index;
+    var indexBranch;
+    for (index = 0; index < branchIndicesArray.length; index++) {
+        if (index !== branchIndicesArray.length - 1) {
+            indexBranch = branchIndicesArray[index];
+            newJsonTree = newJsonTree.skills[indexBranch];
+        } else if (!newJsonTree.skills) {
+            indexBranch = branchIndicesArray[index - 1];
+            newJsonTree['skills'] = [{name: nameNewBranch}];
+        } else {
+            indexBranch = branchIndicesArray[index];
+            newJsonTree.skills[indexBranch] = {name: nameNewBranch};
+        }
+    }
+    branchIndicesArray.splice(0, branchIndicesArray.length);
 };
 
 
 /*
+ var saveNewNodeInTree = function (newJsonTree, levelBranch, enterText) {
+ if (newJsonTree.skills[levelBranch + 1]) {
+ newJsonTree.name =
+ }
+ //console.log(newJsonTree.skills.length);
+ };
+ */
 
-var x = JSON.stringify(jsonTree['skills'][0]['skills']);
-//x = x + '["name"]';
-console.log('x = ', x);
-x = JSON.parse(x);
-console.log('x = ', x);
+//console.log(jsonTree['skills'][0]['skills'][0]['name']);
+//console.log(jsonTree.skills[0].skills[1].skills[0].skills[0].name);
+/*
 
- console.log(jsonTree['skills'][0]['skills'][0]['name']);
- console.log(jsonTree.skills[0].skills[1].skills[0].skills[0].name);
-*/
+ var x = JSON.stringify(jsonTree['skills'][0]['skills']);
+ //x = x + '["name"]';
+ console.log('x = ', x);
+ x = JSON.parse(x);
+ console.log('x = ', x);
+
+ */
 
 
 
