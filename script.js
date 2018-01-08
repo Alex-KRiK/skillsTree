@@ -88,12 +88,22 @@ var jsonTree = {
     ]
 };
 
+var branchIndicesArray = [];
 var container = document.querySelector('.container');
 
+var getDateInSessionStorage = function () {
+    if (sessionStorage.getItem('newJsonTree')) {
+        jsonTree = JSON.parse(sessionStorage.getItem('newJsonTree'));
+    }
+};
+getDateInSessionStorage();
+
 var createNodes = function (value, array) {
-    var span = document.createElement('span');
+    var span;
+    var hr;
+    span = document.createElement('span');
     span.classList.add('title');
-    var hr = document.createElement('hr');
+    hr = document.createElement('hr');
     span.textContent = value;
     container.appendChild(span);
     container.appendChild(hr);
@@ -102,24 +112,30 @@ var createNodes = function (value, array) {
 };
 
 var createNodeLi = function (value) {
-    var li = document.createElement('li');
-    var span = document.createElement('span');
+    var li;
+    var span;
+    li = document.createElement('li');
+    span = document.createElement('span');
     span.textContent = value;
     li.appendChild(span);
     return li;
 };
 
 var createNodesSkills = function (container, arraySkills) {
-    var ul = document.createElement('ul');
+    var ul;
+    var li;
+    var index;
+    ul = document.createElement('ul');
     ul.classList.add('skills');
     container.appendChild(ul);
 
-    for (var index = 0; index < arraySkills.length; index++) {
-        var li = createNodeLi(arraySkills[index].name);
+    for (index = 0; index < arraySkills.length; index++) {
+        li = createNodeLi(arraySkills[index].name);
         ul.appendChild(li);
 
         if (arraySkills[index].skills) {
             li.classList.add('opened');
+            li.firstChild.classList.add('pointer');
             createNodesSkills(li, arraySkills[index].skills);
         }
     }
@@ -131,7 +147,8 @@ var drawDataRocketsTree = function (node) {
 drawDataRocketsTree(jsonTree);
 
 container.addEventListener('click', function closeAndOpenBranch(event) {
-    var element = event.target;
+    var element;
+    element = event.target;
     if (element.tagName === 'SPAN' && element.parentNode.classList.contains('opened')) {
         element.parentNode.classList.toggle('closed');
         element.classList.toggle('dashed');
@@ -139,19 +156,24 @@ container.addEventListener('click', function closeAndOpenBranch(event) {
 });
 
 container.addEventListener('contextmenu', function addNewElement(event) {
-    var element = event.target;
+    var element;
+    var nameNewBranch;
+    var li;
+    var ul;
+    element = event.target;
     if (element.tagName === 'SPAN') {
         event.preventDefault();
-        var nameNewBranch = prompt('Enter new branch name', '');
+        nameNewBranch = prompt('Enter the name of the new tree branch ', '');
 
         if (nameNewBranch !== '' && nameNewBranch !== null) {
-            var li = createNodeLi(nameNewBranch);
+            li = createNodeLi(nameNewBranch);
 
             if (element.nextSibling) {
                 element.nextSibling.appendChild(li);
             } else {
+                element.classList.toggle('pointer', true);
                 element.parentNode.classList.add('opened');
-                var ul = document.createElement('ul');
+                ul = document.createElement('ul');
                 ul.classList.add('skills');
                 ul.appendChild(li);
                 element.parentNode.appendChild(ul);
@@ -160,8 +182,6 @@ container.addEventListener('contextmenu', function addNewElement(event) {
         }
     }
 });
-
-var branchIndicesArray = [];
 
 var searchIndexLi = function (nodeLi) {
     var indexLi;
@@ -183,81 +203,25 @@ var indicesLiInTree = function (nodeLi, nameNewBranch) {
 };
 
 var saveChangesInJsonTree = function (branchIndicesArray, nameNewBranch) {
-    var newJsonTree = jsonTree;
+    var rootNode = jsonTree;
     var index;
     var indexBranch;
     for (index = 0; index < branchIndicesArray.length; index++) {
-        if (index !== branchIndicesArray.length - 1) {
+        if (index < branchIndicesArray.length - 1) {
             indexBranch = branchIndicesArray[index];
-            newJsonTree = newJsonTree.skills[indexBranch];
-        } else if (!newJsonTree.skills) {
+            rootNode = rootNode.skills[indexBranch];
+        } else if (!rootNode.skills) {
             indexBranch = branchIndicesArray[index - 1];
-            newJsonTree['skills'] = [{name: nameNewBranch}];
+            rootNode['skills'] = [{name: nameNewBranch}];
         } else {
             indexBranch = branchIndicesArray[index];
-            newJsonTree.skills[indexBranch] = {name: nameNewBranch};
+            rootNode.skills[indexBranch] = {name: nameNewBranch};
         }
     }
     branchIndicesArray.splice(0, branchIndicesArray.length);
+    addChangeInSessionStorage();
 };
 
-
-/*
- var saveNewNodeInTree = function (newJsonTree, levelBranch, enterText) {
- if (newJsonTree.skills[levelBranch + 1]) {
- newJsonTree.name =
- }
- //console.log(newJsonTree.skills.length);
- };
- */
-
-//console.log(jsonTree['skills'][0]['skills'][0]['name']);
-//console.log(jsonTree.skills[0].skills[1].skills[0].skills[0].name);
-/*
-
- var x = JSON.stringify(jsonTree['skills'][0]['skills']);
- //x = x + '["name"]';
- console.log('x = ', x);
- x = JSON.parse(x);
- console.log('x = ', x);
-
- */
-
-
-
-/*var addNewElementInJsonTree = function () {
-
-
- newJsonTree = ;
- };*/
-//localStorage.setItem('dataRocketsSkillsTree', JSON.stringify(newJsonTree));
-
-//jsonTree = localStorage.getItem('dataRocketsSkillsTree');
-
-//localStorage.clear();
-
-
-//localStorage.setItem('myStorage', 'KRiK-storage');
-//localStorage.setItem('myStorage2', 'KRiK-storage2');
-//localStorage.setItem('myStorage3', 'KRiK-storage3');
-//localStorage.removeItem('myStorage3');
-//localStorage.clear();
-
-//console.log(localStorage.getItem('myStorage'));
-
-
-/*localStorage.setItem('dataRocketsSkillsTree', JSON.stringify(jsonTree));
- console.log(localStorage.getItem('dataRocketsSkillsTree'));
- var obj = JSON.parse(localStorage.getItem('dataRocketsSkillsTree'));
- console.dir(obj);*/
-
-
-/*sessionStorage.setItem('newStorage2', 'KRiK-X');
- sessionStorage.setItem('newStorage', 'KRiK-2');*/
-
-
-
-
-
-
-
+var addChangeInSessionStorage = function () {
+    sessionStorage.setItem('newJsonTree', JSON.stringify(jsonTree));
+};
