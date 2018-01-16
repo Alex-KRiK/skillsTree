@@ -3,3 +3,5 @@ The given code at the entrance accepts JSON-object of a tree structure with а r
 
 <h2>Demo</h2>
 https://alex-krik.github.io/skillsTree
+
+<img width="782" alt="skillstree" src="https://user-images.githubusercontent.com/26335532/35010138-9549155e-fb0a-11e7-8f7e-cfaa437a4f54.png">
