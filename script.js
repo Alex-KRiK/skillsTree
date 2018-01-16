@@ -116,6 +116,8 @@ var createNodeLi = function (value) {
     var span;
     li = document.createElement('li');
     span = document.createElement('span');
+    span.classList.contains('visible');
+    span.setAttribute('tabIndex', '1');
     span.textContent = value;
     li.appendChild(span);
     return li;
@@ -141,10 +143,10 @@ var createNodesSkills = function (container, arraySkills) {
     }
 };
 
-var drawDataRocketsTree = function (node) {
+var drawSkillsTree = function (node) {
     createNodes(node.name, node.skills);
 };
-drawDataRocketsTree(jsonTree);
+drawSkillsTree(jsonTree);
 
 container.addEventListener('click', function closeAndOpenBranch(event) {
     var element;
@@ -153,6 +155,24 @@ container.addEventListener('click', function closeAndOpenBranch(event) {
         element.parentNode.classList.toggle('closed');
         element.classList.toggle('dashed');
     }
+
+    var searchChildren = function (node) {
+        if (node.firstElementChild) {
+            for (var i = 0; i < node.children.length; i++) {
+                if (node.children[i].tagName === "SPAN") {
+                    node.children[i].classList.add('closeSpan');
+                } else if (node.children[i].length) {
+                    searchChildren()
+                }
+
+                    }
+        }
+    };
+
+    if (element.nextSibling && element.nextSibling.tagName === 'UL') {
+        searchChildren(element.nextSibling);
+    }
+
 });
 
 container.addEventListener('contextmenu', function addNewElement(event) {
@@ -203,9 +223,10 @@ var indicesLiInTree = function (nodeLi, nameNewBranch) {
 };
 
 var saveChangesInJsonTree = function (branchIndicesArray, nameNewBranch) {
-    var rootNode = jsonTree;
+    var rootNode;
     var index;
     var indexBranch;
+    rootNode = jsonTree;
     for (index = 0; index < branchIndicesArray.length; index++) {
         if (index < branchIndicesArray.length - 1) {
             indexBranch = branchIndicesArray[index];
@@ -225,3 +246,60 @@ var saveChangesInJsonTree = function (branchIndicesArray, nameNewBranch) {
 var addChangeInSessionStorage = function () {
     sessionStorage.setItem('newJsonTree', JSON.stringify(jsonTree));
 };
+
+var focusFirstElementTree = function () {
+    var firstElementTree;
+    firstElementTree = document.getElementsByTagName('span');
+    firstElementTree[1].focus();
+    //console.log(firstElementTree);
+};
+focusFirstElementTree();
+
+/*var keyboardNavigation = function () {
+ var spaneCollection;
+ var spaneArray;
+ var index;
+ spaneCollection = document.getElementsByTagName('span');
+ spaneArray = Array.prototype.slice.call(spaneCollection);
+ for (index = 0; index < spaneArray.length; index++) {
+
+ }
+ console.log(spaneCollection);
+ console.log(spaneArray);
+
+ };
+ keyboardNavigation();*/
+
+container.addEventListener('keydown', function (event) {
+    var spaneCollection;
+    var spaneArray;
+    var curElement;
+    var indexSpan;
+
+    curElement = document.activeElement;
+    spaneCollection = document.getElementsByTagName('span');
+    spaneArray = Array.prototype.slice.call(spaneCollection);
+   indexSpan = spaneArray.indexOf(curElement);
+    if (event.keyCode === 38 && indexSpan !== 1) {
+        spaneArray[indexSpan - 1].focus();
+ /*       console.log('childNodes = ', curElement.parentElement.children);
+        console.log('spaneArray = ', spaneArray);
+        console.log('indexSpan = ', indexSpan);
+        console.log('curElement = ', curElement);*/
+    } else if (event.keyCode === 38 && indexSpan === 1) {
+        spaneArray[spaneArray.length - 1].focus();
+/*        console.log('spaneArray = ', spaneArray);
+        console.log('indexSpan = ', indexSpan);
+        console.log('curElement = ', curElement);*/
+    } else if (event.keyCode === 40 && indexSpan !== spaneArray.length - 1) {
+        spaneArray[indexSpan + 1].focus();
+/*        console.log('spaneArray = ', spaneArray);
+        console.log('indexSpan = ', indexSpan);
+        console.log('curElement = ', curElement);*/
+    } else if (event.keyCode === 40 && indexSpan === spaneArray.length - 1) {
+        spaneArray[1].focus();
+/*        console.log('spaneArray = ', spaneArray);
+        console.log('indexSpan = ', indexSpan);
+        console.log('curElement = ', curElement);*/
+    }
+});

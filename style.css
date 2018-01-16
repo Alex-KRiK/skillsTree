@@ -33,3 +33,15 @@ span:hover {
 .dashed {
     border-bottom: 1px dashed darkgray;
 }
+
+span {
+    : 1;
+}
+
+span:focus {
+    /*outline: 1px dashed darkblue;*/
+    outline: none;
+    font-weight: bold;
+    background-color: lightgrey;
+    /*border-bottom: 1px solid blue;*/
+}
